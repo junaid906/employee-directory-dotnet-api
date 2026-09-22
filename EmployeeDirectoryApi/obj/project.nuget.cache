@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "Y6Qkox/0SOg=",
+  "success": true,
+  "projectFilePath": "/Users/junaid/Documents/Code/employee-directory-api/EmployeeDirectoryApi/EmployeeDirectoryApi/EmployeeDirectoryApi.csproj",
+  "expectedPackageFiles": [
+    "/Users/junaid/.nuget/packages/microsoft.aspnetcore.openapi/10.0.11/microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",
+    "/Users/junaid/.nuget/packages/microsoft.openapi/2.7.5/microsoft.openapi.2.7.5.nupkg.sha512",
+    "/Users/junaid/.nuget/packages/system.text.json/8.0.5/system.text.json.8.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}
