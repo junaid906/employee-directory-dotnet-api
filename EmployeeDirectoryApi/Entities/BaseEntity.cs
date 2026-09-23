@@ -1,6 +1,6 @@
-namespace EmployeeDirectoryApi.Models;
+namespace EmployeeDirectoryApi.Entities;
 
-public abstract class BaseModel
+public abstract class BaseEntity
 {
     public long Id { get;  protected set; }
     public Guid UniqueId { get; protected set; } = Guid.NewGuid();
