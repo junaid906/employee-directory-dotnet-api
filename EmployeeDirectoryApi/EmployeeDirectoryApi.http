@@ -1,6 +1,5 @@
 @EmployeeDirectoryApi_HostAddress = http://localhost:5102
 
-GET {{EmployeeDirectoryApi_HostAddress}}/weatherforecast/
+GET {{EmployeeDirectoryApi_HostAddress}}/employees/
 Accept: application/json
-
-###
+##
