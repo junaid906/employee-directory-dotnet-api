@@ -18,10 +18,20 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<EmployeeDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Employees")));
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 app.UseCors("FrontendPolicy");
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Employee API V1");
+    });
+}
 
 app.MapGet("/", () => "Hello World!");
 app.MapEmployees();
