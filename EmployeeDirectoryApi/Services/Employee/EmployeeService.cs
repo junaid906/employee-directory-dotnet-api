@@ -13,11 +13,23 @@ public class EmployeeService : IEmployeeService
         return Task.FromResult(employees);
     }
 
+    public async Task<EmployeeDto?> GetEmployee(long id, CancellationToken ct = default)
+    {
+        var employee = EmployeeSeed.Employees().FirstOrDefault(e => e.Id == id);
+        return employee is null ? null : Map(employee);
+    }
+    
     private static EmployeeDto Map(EmployeeEntity employee) => new()
     {
         Id = employee.Id,
         FirstName = employee.FirstName,
         LastName = employee.LastName,
         Email = employee.Email,
+        Department = employee.Department,
+        SubDepartment = employee.SubDepartment,
+        JobTitle = employee.JobTitle,
+        ReportingTo = employee.ReportingTo,
+        SeatingPosition = employee.SeatingPosition,
+        AvatarUrl = employee.AvatarUrl,
     };
 }

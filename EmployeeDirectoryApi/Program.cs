@@ -34,5 +34,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGet("/", () => "Hello World!");
-app.MapEmployees();
+app.MapEndpoints();
 app.Run();
