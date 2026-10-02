@@ -7,10 +7,10 @@ public sealed class GetEmployeeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {
-        endpoint.MapGet("/employees/{id:long}", async (
-                long id, IEmployeeService service, CancellationToken ct) =>
+        endpoint.MapGet("/employees/{uniqueId:guid}", async (
+                Guid uniqueId, IEmployeeService service, CancellationToken ct) =>
             {
-                var employee = await service.GetEmployee(id, ct);
+                var employee = await service.GetEmployee(uniqueId, ct);
                 return employee is null ? Results.NotFound() : Results.Ok(employee);
             })
             .WithName("GetEmployee")

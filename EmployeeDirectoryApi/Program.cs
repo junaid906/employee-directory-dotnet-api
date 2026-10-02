@@ -1,5 +1,5 @@
 using EmployeeDirectoryApi.Data;
-using EmployeeDirectoryApi.Endpoints;
+using EmployeeDirectoryApi.Endpoints.Employees;
 using EmployeeDirectoryApi.Services.Employee;
 using EmployeeDirectoryApi.Services.Employee.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -34,5 +34,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGet("/", () => "Hello World!");
-app.MapEndpoints();
+app.MapGetEmployees();
 app.Run();

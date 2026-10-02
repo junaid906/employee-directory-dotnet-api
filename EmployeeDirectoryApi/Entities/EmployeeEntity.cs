@@ -10,7 +10,7 @@ public class EmployeeEntity : BaseEntity
     public required string Department { get; set; }
     public required string SubDepartment { get; set; }
     public required string JobTitle { get; set; }
-    public long? ReportingTo { get; set; }
+    public long? ReportingToId { get; set; }
     public int? SeatingPosition { get; set; }
     public string? AvatarUrl { get; set; }
 }

@@ -42,8 +42,6 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
             .HasMaxLength(100)
             .IsRequired();
         
-        builder.Property(x => x.ReportingTo);
-
         builder.Property(x => x.SeatingPosition);
         
         builder.Property(x => x.AvatarUrl)
