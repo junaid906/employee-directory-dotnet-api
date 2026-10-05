@@ -14,7 +14,7 @@ public static class EmployeeSeed
         {
             if (managerUniqueId is { } reportingToUniqueId)
             {
-                employee.ReportingToId = idByUniqueId[reportingToUniqueId];
+                employee.ReportTo(idByUniqueId[reportingToUniqueId]);
             }
         }
 
@@ -49,6 +49,8 @@ public static class EmployeeSeed
         Create(24, "00000000-0000-0000-0000-000000000024", "Rachel", "Green", "rachel.green@example.com", "Finance", "Accounting", "Accountant", "00000000-0000-0000-0000-000000000006", 24, "https://i.pravatar.cc/300?u=rachel.green@example.com"),
         Create(25, "00000000-0000-0000-0000-000000000025", "Victor", "Nguyen", "victor.nguyen@example.com", "Operations", "Facilities", "Facilities Coordinator", "00000000-0000-0000-0000-000000000007", 25, "https://i.pravatar.cc/300?u=victor.nguyen@example.com"),
     ];
+    
+    
 
     private static (EmployeeEntity Employee, Guid? ReportingToUniqueId) Create(
         long id,
@@ -64,17 +66,17 @@ public static class EmployeeSeed
         string? avatarUrl
     )
     {
-        var employee = new EmployeeEntity
-        {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email,
-            Department = department,
-            SubDepartment = subDepartment,
-            JobTitle = jobTitle,
-            SeatingPosition = seatingPosition,
-            AvatarUrl = avatarUrl,
-        };
+        var employee = new EmployeeEntity(
+            firstName,
+            lastName,
+            email,
+            department,
+            subDepartment,
+            jobTitle,
+            seatingPosition,
+            avatarUrl
+        );
+        
         employee.SetId(id);
         employee.SetUniqueId(Guid.Parse(uniqueId));
 

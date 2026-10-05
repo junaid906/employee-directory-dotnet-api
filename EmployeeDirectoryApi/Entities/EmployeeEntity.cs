@@ -1,18 +1,16 @@
-using EmployeeDirectoryApi.Entities;
-
 namespace EmployeeDirectoryApi.Entities;
 
 public class EmployeeEntity : BaseEntity
 {
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public required string Email { get; set; }
-    public required string Department { get; set; }
-    public required string SubDepartment { get; set; }
-    public required string JobTitle { get; set; }
-    public long? ReportingToId { get; set; }
-    public int? SeatingPosition { get; set; }
-    public string? AvatarUrl { get; set; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+    public string Email { get; private set; }
+    public string Department { get; private set; }
+    public string SubDepartment { get; private set; }
+    public string JobTitle { get; private set; }
+    public long? ReportingToId { get; private set; }
+    public int? SeatingPosition { get; private set; }
+    public string? AvatarUrl { get; private set; }
     
     public EmployeeEntity( ) {}
 
@@ -47,12 +45,43 @@ public class EmployeeEntity : BaseEntity
         Department = department;
     }
     
-    public void UpdateSubDepartment(string subDepartment){
+    public void UpdateSubDepartment(string subDepartment)
+    {
         if (string.IsNullOrEmpty(subDepartment))
         {
             throw new ArgumentException("subDepartment cannot be null or empty");
         }
+        
         SubDepartment = subDepartment;
     }
     
+    public void UpdateJobTitle(string jobTitle)
+    {
+        if (string.IsNullOrEmpty(jobTitle))
+        {
+            throw new ArgumentException("jobTitle cannot be null or empty");
+        }
+        
+        JobTitle = jobTitle;
+    }
+
+    public void ReportTo(long managerId)
+    {
+        ReportingToId = managerId;
+    }
+
+    public void UpdateSeatingPosition(int seatingPosition)
+    {
+        SeatingPosition = seatingPosition;
+    }
+
+    public void UpdateAvatarUrl(string avatarUrl)
+    {
+        if (string.IsNullOrEmpty(avatarUrl))
+        {
+            throw new ArgumentException("avatarUrl cannot be null or empty");
+        }
+        
+        AvatarUrl = avatarUrl;
+    }
 }

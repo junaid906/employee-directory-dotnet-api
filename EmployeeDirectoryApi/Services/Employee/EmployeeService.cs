@@ -52,6 +52,45 @@ public class EmployeeService : IEmployeeService
         return Map(employee, reportingToUniqueId);
     }
 
+    public async Task<EmployeeDto> CreateEmployee(CreateEmployeeDto createEmployeeDto, CancellationToken ct = default)
+    {
+        long? reportingToId = null;
+
+        if (createEmployeeDto.ReportingToUniqueId is { } managerUniqueId)
+        {
+            reportingToId = await _dbContext.Employees
+                .Where(e => e.UniqueId == managerUniqueId)
+                .Select(e => (long?)e.Id)
+                .FirstOrDefaultAsync(ct);
+
+            if (reportingToId is null)
+            {
+                throw new ArgumentException($"No manager found for {managerUniqueId}");
+            }
+        }
+        
+        var employee = new EmployeeEntity(
+            createEmployeeDto.FirstName,
+            createEmployeeDto.LastName,
+            createEmployeeDto.Email,
+            createEmployeeDto.Department,
+            createEmployeeDto.SubDepartment,
+            createEmployeeDto.JobTitle,
+            createEmployeeDto.SeatingPosition,
+            createEmployeeDto.AvatarUrl
+        );
+
+        if (reportingToId is { } managerId)
+        {
+            employee.ReportTo(managerId);
+        }
+        
+        _dbContext.Employees.Add(employee);
+        await _dbContext.SaveChangesAsync(ct);
+
+        return Map(employee, createEmployeeDto.ReportingToUniqueId);
+    }
+
     private static EmployeeDto Map(EmployeeEntity employee, Guid? reportingToUniqueId) => new()
     {
         UniqueId = employee.UniqueId,
