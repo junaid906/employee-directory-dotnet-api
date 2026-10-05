@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace EmployeeDirectoryApi.Migrations
 {
-    [DbContext(typeof(EmployeeDbContext))]
+    [DbContext(typeof(EmployeeDirectoryDbContext))]
     [Migration("20261002135918_Initial")]
     partial class Initial
     {

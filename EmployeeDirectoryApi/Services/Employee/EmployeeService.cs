@@ -2,37 +2,57 @@ using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos;
 using EmployeeDirectoryApi.Entities;
 using EmployeeDirectoryApi.Services.Employee.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.Employee;
 
 public class EmployeeService : IEmployeeService
 {
-    public Task<List<EmployeeDto>> GetAllEmployees(CancellationToken ct = default)
+    private readonly EmployeeDirectoryDbContext _dbContext;
+    public EmployeeService(EmployeeDirectoryDbContext dbContext)
     {
-        var employees = EmployeeSeed.Employees();
+        _dbContext = dbContext;
+    }
+    
+    public async Task<List<EmployeeDto>> GetAllEmployees(CancellationToken ct = default)
+    {
+        var employees = await _dbContext.Employees
+            .AsNoTracking()
+            .ToListAsync(ct);
+        
         var uniqueIdById = employees.ToDictionary(e => e.Id, e => e.UniqueId);
 
         var result = employees
-            .Select(e => Map(e, uniqueIdById))
+            .Select(e => Map(e, e.ReportingToId is { } managerId ? uniqueIdById[managerId] : null))
             .ToList();
 
-        return Task.FromResult(result);
+        return result;
     }
 
     public async Task<EmployeeDto?> GetEmployee(Guid uniqueId, CancellationToken ct = default)
     {
-        var employees = EmployeeSeed.Employees();
-        var employee = employees.FirstOrDefault(e => e.UniqueId == uniqueId);
+        var employee = await _dbContext.Employees
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.UniqueId == uniqueId, ct);
+        
         if (employee is null)
         {
             return null;
         }
 
-        var uniqueIdById = employees.ToDictionary(e => e.Id, e => e.UniqueId);
-        return Map(employee, uniqueIdById);
+        Guid? reportingToUniqueId = null;
+        if (employee.ReportingToId is { } managerId)
+        {
+            reportingToUniqueId = await _dbContext.Employees
+                .Where(e => e.Id == managerId)
+                .Select(e => e.UniqueId)
+                .FirstOrDefaultAsync(ct);
+        }
+
+        return Map(employee, reportingToUniqueId);
     }
 
-    private static EmployeeDto Map(EmployeeEntity employee, IReadOnlyDictionary<long, Guid> uniqueIdById) => new()
+    private static EmployeeDto Map(EmployeeEntity employee, Guid? reportingToUniqueId) => new()
     {
         UniqueId = employee.UniqueId,
         FirstName = employee.FirstName,
@@ -41,8 +61,8 @@ public class EmployeeService : IEmployeeService
         Department = employee.Department,
         SubDepartment = employee.SubDepartment,
         JobTitle = employee.JobTitle,
-        ReportingToUniqueId = employee.ReportingToId is { } managerId ? uniqueIdById[managerId] : null,
+        ReportingToUniqueId = reportingToUniqueId,
         SeatingPosition = employee.SeatingPosition,
-        AvatarUrl = employee.AvatarUrl,
+        AvatarUrl = employee.AvatarUrl
     };
 }
