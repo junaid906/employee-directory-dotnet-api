@@ -22,15 +22,14 @@ public class EmployeeService : IEmployeeService
             .AsNoTracking()
             .Where(e => e.Active)
             .ToListAsync(ct);
-            
-        
-        var uniqueIdById = employees.ToDictionary(e => e.Id, e => e.UniqueId);
 
-        var result = employees
-            .Select(e => Map(e, e.ReportingToId is { } managerId ? uniqueIdById[managerId] : null))
+        var uniqueIdByPositionId = await _dbContext.EmployeePositions
+            .AsNoTracking()
+            .ToDictionaryAsync(p => p.Id, p => p.UniqueId, ct);
+
+        return employees
+            .Select(e => Map(e, e.PositionId is { } positionId ? uniqueIdByPositionId[positionId] : null))
             .ToList();
-
-        return result;
     }
 
     #endregion
@@ -43,36 +42,40 @@ public class EmployeeService : IEmployeeService
             .AsNoTracking()
             .Where(e => e.Active)
             .FirstOrDefaultAsync(e => e.UniqueId == uniqueId, ct);
-        
+
         if (employee is null)
         {
             return null;
         }
 
-        Guid? reportingToUniqueId = null;
-        if (employee.ReportingToId is { } managerId)
+        Guid? positionUniqueId = null;
+        if (employee.PositionId is { } positionId)
         {
-            reportingToUniqueId = await _dbContext.Employees
-                .Where(e => e.Id == managerId)
-                .Where(e => e.Active)
-                .Select(e => e.UniqueId)
+            positionUniqueId = await _dbContext.EmployeePositions
+                .Where(p => p.Id == positionId)
+                .Select(p => (Guid?)p.UniqueId)
                 .FirstOrDefaultAsync(ct);
         }
 
-        return Map(employee, reportingToUniqueId);
+        return Map(employee, positionUniqueId);
     }
 
     #endregion
-    
+
     #region Get Managers
 
     public async Task<List<ManagerSummaryDto>> GetManagersSummarised(CancellationToken ct = default)
     {
-        var managers = await _dbContext.Employees
+        // positions that have at least one child position are management seats
+        var parentPositionIds = _dbContext.EmployeePositions
+            .Where(p => p.Active && p.ReportToPositionId != null)
+            .Select(p => p.ReportToPositionId!.Value);
+
+        return await _dbContext.Employees
             .AsNoTracking()
-            .Where(e => _dbContext.Employees
-                .Any(sub => sub.ReportingToId == e.Id))
-            .Where(e => e.Active)
+            .Where(e => e.Active
+                        && e.PositionId != null
+                        && parentPositionIds.Contains(e.PositionId.Value))
             .Select(e => new ManagerSummaryDto
             {
                 UniqueId = e.UniqueId,
@@ -80,59 +83,56 @@ public class EmployeeService : IEmployeeService
                 LastName = e.LastName
             })
             .ToListAsync(ct);
-
-        return managers;
     }
-    
+
     #endregion
 
     #region Create Employee
 
     public async Task<EmployeeDto> CreateEmployee(CreateEmployeeDto createEmployeeDto, CancellationToken ct = default)
     {
-        long? reportingToId = null;
+        long? positionId = null;
 
-        if (createEmployeeDto.ReportingToUniqueId is { } managerUniqueId)
+        if (createEmployeeDto.PositionUniqueId is { } positionUniqueId)
         {
-            reportingToId = await _dbContext.Employees
-                .Where(e => e.UniqueId == managerUniqueId)
-                .Select(e => (long?)e.Id)
+            positionId = await _dbContext.EmployeePositions
+                .Where(p => p.UniqueId == positionUniqueId)
+                .Select(p => (long?)p.Id)
                 .FirstOrDefaultAsync(ct);
 
-            if (reportingToId is null)
+            if (positionId is null)
             {
-                throw new ArgumentException($"No manager found for {managerUniqueId}");
+                throw new ArgumentException($"No position found for {positionUniqueId}");
             }
         }
-        
+
         var employee = new EmployeeEntity(
             createEmployeeDto.FirstName,
             createEmployeeDto.LastName,
             createEmployeeDto.Email,
-            
             createEmployeeDto.AvatarUrl
         );
 
-        if (reportingToId is { } managerId)
+        if (positionId is { } assignedPositionId)
         {
-            employee.ReportTo(managerId);
+            employee.UpdatePositionId(assignedPositionId);
         }
-        
+
         _dbContext.Employees.Add(employee);
         await _dbContext.SaveChangesAsync(ct);
 
-        return Map(employee, createEmployeeDto.ReportingToUniqueId);
+        return Map(employee, createEmployeeDto.PositionUniqueId);
     }
 
     #endregion
-    
 
-    private static EmployeeDto Map(EmployeeEntity employee, Guid? reportingToUniqueId) => new()
+    private static EmployeeDto Map(EmployeeEntity employee, Guid? positionUniqueId) => new()
     {
         UniqueId = employee.UniqueId,
         FirstName = employee.FirstName,
         LastName = employee.LastName,
         Email = employee.Email,
+        PositionUniqueId = positionUniqueId,
         AvatarUrl = employee.AvatarUrl
     };
 }
