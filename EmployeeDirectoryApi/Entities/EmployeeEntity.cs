@@ -5,11 +5,7 @@ public class EmployeeEntity : BaseEntity
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
-    public string Department { get; private set; }
-    public string SubDepartment { get; private set; }
-    public string JobTitle { get; private set; }
-    public long? ReportingToId { get; private set; }
-    public int? SeatingPosition { get; private set; }
+    public long? PositionId { get; private set; }
     public string? AvatarUrl { get; private set; }
     
     public EmployeeEntity( ) {}
@@ -18,61 +14,18 @@ public class EmployeeEntity : BaseEntity
         string firstName,
         string lastName,
         string email,
-        string department,
-        string subDepartment,
-        string jobTitle,
-        int? seatingPosition,
         string? avatarUrl
     )
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
-        Department = department;
-        SubDepartment = subDepartment;
-        JobTitle = jobTitle;
-        SeatingPosition = seatingPosition;
         AvatarUrl = avatarUrl;
     }
-    
-    public void UpdateDepartment(string department)
-    {
-        if (string.IsNullOrEmpty(department))
-        {
-            throw new ArgumentException("department cannot be null or empty");
-        }
-        
-        Department = department;
-    }
-    
-    public void UpdateSubDepartment(string subDepartment)
-    {
-        if (string.IsNullOrEmpty(subDepartment))
-        {
-            throw new ArgumentException("subDepartment cannot be null or empty");
-        }
-        
-        SubDepartment = subDepartment;
-    }
-    
-    public void UpdateJobTitle(string jobTitle)
-    {
-        if (string.IsNullOrEmpty(jobTitle))
-        {
-            throw new ArgumentException("jobTitle cannot be null or empty");
-        }
-        
-        JobTitle = jobTitle;
-    }
 
-    public void ReportTo(long managerId)
+    public void UpdatePositionId(long positionId)
     {
-        ReportingToId = managerId;
-    }
-
-    public void UpdateSeatingPosition(int seatingPosition)
-    {
-        SeatingPosition = seatingPosition;
+        PositionId = positionId;
     }
 
     public void UpdateAvatarUrl(string avatarUrl)

@@ -30,19 +30,9 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
             .HasMaxLength(100)
             .IsRequired();
         
-        builder.Property(x => x.Department)
+        builder.Property(x => x.PositionId)
             .HasMaxLength(100)
             .IsRequired();
-        
-        builder.Property(x => x.SubDepartment)
-            .HasMaxLength(100)
-            .IsRequired();
-        
-        builder.Property(x => x.JobTitle)
-            .HasMaxLength(100)
-            .IsRequired();
-        
-        builder.Property(x => x.SeatingPosition);
         
         builder.Property(x => x.AvatarUrl)
             .HasMaxLength(500);

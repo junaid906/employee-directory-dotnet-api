@@ -13,12 +13,16 @@ public class EmployeeService : IEmployeeService
     {
         _dbContext = dbContext;
     }
-    
+
+    #region Get All Employees
+
     public async Task<List<EmployeeDto>> GetAllEmployees(CancellationToken ct = default)
     {
         var employees = await _dbContext.Employees
             .AsNoTracking()
+            .Where(e => e.Active)
             .ToListAsync(ct);
+            
         
         var uniqueIdById = employees.ToDictionary(e => e.Id, e => e.UniqueId);
 
@@ -29,10 +33,15 @@ public class EmployeeService : IEmployeeService
         return result;
     }
 
+    #endregion
+
+    #region Get Employee
+
     public async Task<EmployeeDto?> GetEmployee(Guid uniqueId, CancellationToken ct = default)
     {
         var employee = await _dbContext.Employees
             .AsNoTracking()
+            .Where(e => e.Active)
             .FirstOrDefaultAsync(e => e.UniqueId == uniqueId, ct);
         
         if (employee is null)
@@ -45,12 +54,39 @@ public class EmployeeService : IEmployeeService
         {
             reportingToUniqueId = await _dbContext.Employees
                 .Where(e => e.Id == managerId)
+                .Where(e => e.Active)
                 .Select(e => e.UniqueId)
                 .FirstOrDefaultAsync(ct);
         }
 
         return Map(employee, reportingToUniqueId);
     }
+
+    #endregion
+    
+    #region Get Managers
+
+    public async Task<List<ManagerSummaryDto>> GetManagersSummarised(CancellationToken ct = default)
+    {
+        var managers = await _dbContext.Employees
+            .AsNoTracking()
+            .Where(e => _dbContext.Employees
+                .Any(sub => sub.ReportingToId == e.Id))
+            .Where(e => e.Active)
+            .Select(e => new ManagerSummaryDto
+            {
+                UniqueId = e.UniqueId,
+                FirstName = e.FirstName,
+                LastName = e.LastName
+            })
+            .ToListAsync(ct);
+
+        return managers;
+    }
+    
+    #endregion
+
+    #region Create Employee
 
     public async Task<EmployeeDto> CreateEmployee(CreateEmployeeDto createEmployeeDto, CancellationToken ct = default)
     {
@@ -73,10 +109,7 @@ public class EmployeeService : IEmployeeService
             createEmployeeDto.FirstName,
             createEmployeeDto.LastName,
             createEmployeeDto.Email,
-            createEmployeeDto.Department,
-            createEmployeeDto.SubDepartment,
-            createEmployeeDto.JobTitle,
-            createEmployeeDto.SeatingPosition,
+            crea
             createEmployeeDto.AvatarUrl
         );
 
@@ -90,6 +123,9 @@ public class EmployeeService : IEmployeeService
 
         return Map(employee, createEmployeeDto.ReportingToUniqueId);
     }
+
+    #endregion
+    
 
     private static EmployeeDto Map(EmployeeEntity employee, Guid? reportingToUniqueId) => new()
     {

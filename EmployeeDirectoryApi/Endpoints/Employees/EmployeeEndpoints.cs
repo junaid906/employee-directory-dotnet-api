@@ -6,7 +6,8 @@ public static class EmployeeEndpoints
     {
         new GetAllEmployeesEndpoint().MapEndpoint(endpoint);
         new GetEmployeeEndpoint().MapEndpoint(endpoint);
-        new CreateEmployeeEndpoint().MapEndpoint(endpoint);
+        new PostEmployeeEndpoint().MapEndpoint(endpoint);
+        new GetManagersSummarised().MapEndpoint(endpoint);
         
         return endpoint;
     }
