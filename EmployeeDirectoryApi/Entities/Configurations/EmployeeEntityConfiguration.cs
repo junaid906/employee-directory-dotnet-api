@@ -1,8 +1,7 @@
-using EmployeeDirectoryApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EmployeeDirectoryApi.Data.Configurations;
+namespace EmployeeDirectoryApi.Entities.Configurations;
 
 public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEntity>
 {
@@ -30,19 +29,18 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
             .HasMaxLength(100)
             .IsRequired();
         
-        builder.Property(x => x.PositionId)
-            .HasMaxLength(100)
-            .IsRequired();
-        
         builder.Property(x => x.AvatarUrl)
             .HasMaxLength(500);
-        
-        
-        
+
         builder.HasIndex(x => x.Email)
             .IsUnique();
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");
+
+        builder.HasOne<EmployeePositionEntity>()
+            .WithMany()
+            .HasForeignKey(x => x.PositionId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

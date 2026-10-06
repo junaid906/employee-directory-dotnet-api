@@ -109,7 +109,7 @@ public class EmployeeService : IEmployeeService
             createEmployeeDto.FirstName,
             createEmployeeDto.LastName,
             createEmployeeDto.Email,
-            crea
+            
             createEmployeeDto.AvatarUrl
         );
 
@@ -133,11 +133,6 @@ public class EmployeeService : IEmployeeService
         FirstName = employee.FirstName,
         LastName = employee.LastName,
         Email = employee.Email,
-        Department = employee.Department,
-        SubDepartment = employee.SubDepartment,
-        JobTitle = employee.JobTitle,
-        ReportingToUniqueId = reportingToUniqueId,
-        SeatingPosition = employee.SeatingPosition,
         AvatarUrl = employee.AvatarUrl
     };
 }
