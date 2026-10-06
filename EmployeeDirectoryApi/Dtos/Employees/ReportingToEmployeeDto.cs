@@ -1,4 +1,4 @@
-namespace EmployeeDirectoryApi.Dtos;
+namespace EmployeeDirectoryApi.Dtos.Employees;
 
 public class ReportingToEmployeeDto
 {

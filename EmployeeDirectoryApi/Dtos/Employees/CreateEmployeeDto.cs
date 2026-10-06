@@ -1,8 +1,7 @@
-namespace EmployeeDirectoryApi.Dtos;
+namespace EmployeeDirectoryApi.Dtos.Employees;
 
-public class EmployeeDto
+public class CreateEmployeeDto
 {
-    public required Guid UniqueId { get; init; }
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
     public required string Email { get; init; }

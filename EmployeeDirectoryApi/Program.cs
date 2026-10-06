@@ -1,8 +1,17 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Data.Seed;
+using EmployeeDirectoryApi.Endpoints.Departments;
 using EmployeeDirectoryApi.Endpoints.Employees;
+using EmployeeDirectoryApi.Endpoints.Positions;
+using EmployeeDirectoryApi.Endpoints.SubDepartments;
+using EmployeeDirectoryApi.Services.Department;
+using EmployeeDirectoryApi.Services.Department.Interface;
 using EmployeeDirectoryApi.Services.Employee;
 using EmployeeDirectoryApi.Services.Employee.Interfaces;
+using EmployeeDirectoryApi.Services.Position;
+using EmployeeDirectoryApi.Services.Position.Interface;
+using EmployeeDirectoryApi.Services.SubDepartment;
+using EmployeeDirectoryApi.Services.SubDepartment.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +28,9 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<EmployeeDirectoryDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Employees")));
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IPositionService, PositionService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<ISubDepartmentService, SubDepartmentService>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -45,4 +57,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", () => "Hello World!");
 app.MapGetEmployees();
+app.MapPositions();
+app.MapDepartments();
+app.MapSubDepartments();
 app.Run();

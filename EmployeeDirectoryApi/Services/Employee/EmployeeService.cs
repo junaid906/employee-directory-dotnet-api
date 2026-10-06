@@ -1,5 +1,5 @@
 using EmployeeDirectoryApi.Data;
-using EmployeeDirectoryApi.Dtos;
+using EmployeeDirectoryApi.Dtos.Employees;
 using EmployeeDirectoryApi.Entities;
 using EmployeeDirectoryApi.Services.Employee.Interfaces;
 using Microsoft.EntityFrameworkCore;

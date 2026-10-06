@@ -1,4 +1,4 @@
-using EmployeeDirectoryApi.Dtos;
+using EmployeeDirectoryApi.Dtos.Employees;
 
 namespace EmployeeDirectoryApi.Services.Employee.Interfaces;
 
