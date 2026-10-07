@@ -8,6 +8,7 @@ public static class EmployeeEndpoints
         new GetEmployeeEndpoint().MapEndpoint(endpoint);
         new PostCreateEmployeeEndpoint().MapEndpoint(endpoint);
         new GetManagersSummarisedEndpoint().MapEndpoint(endpoint);
+        new PostDeactivateEmployeeEndpoint().MapEndpoint(endpoint);
         
         return endpoint;
     }
