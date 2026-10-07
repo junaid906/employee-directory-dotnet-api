@@ -228,11 +228,11 @@ public static class EmployeeSeed
                 firstName,
                 lastName,
                 email,
+                positionIdByRow[row.Index],
                 $"https://i.pravatar.cc/300?u={email}");
 
             employee.SetId(row.Index);
             employee.SetUniqueId(Guid.NewGuid());
-            employee.UpdatePositionId(positionIdByRow[row.Index]);
 
             employees.Add(employee);
         }

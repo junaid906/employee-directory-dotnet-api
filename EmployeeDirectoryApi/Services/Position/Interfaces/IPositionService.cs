@@ -1,6 +1,6 @@
 using EmployeeDirectoryApi.Dtos.Positions;
 
-namespace EmployeeDirectoryApi.Services.Position.Interface;
+namespace EmployeeDirectoryApi.Services.Position.Interfaces;
 
 public interface IPositionService
 {

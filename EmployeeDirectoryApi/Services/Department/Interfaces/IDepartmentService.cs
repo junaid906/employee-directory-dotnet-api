@@ -1,6 +1,6 @@
 using EmployeeDirectoryApi.Dtos.Departments;
 
-namespace EmployeeDirectoryApi.Services.Department.Interface;
+namespace EmployeeDirectoryApi.Services.Department.Interfaces;
 
 public interface IDepartmentService
 {

@@ -3,7 +3,7 @@ using EmployeeDirectoryApi.Services.Employee.Interfaces;
 
 namespace EmployeeDirectoryApi.Endpoints.Employees;
 
-public sealed class GetManagersSummarised : IEndpoint
+public sealed class GetManagersSummarisedEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {

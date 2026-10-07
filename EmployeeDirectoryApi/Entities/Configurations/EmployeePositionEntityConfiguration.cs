@@ -23,19 +23,19 @@ public class EmployeePositionEntityConfiguration : IEntityTypeConfiguration<Empl
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");
-
-        builder.HasOne<DepartmentEntity>()
+        
+        builder.HasOne(x => x.Department)
             .WithMany()
             .HasForeignKey(x => x.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne<SubDepartmentEntity>()
+        
+        builder.HasOne(x => x.SubDepartment)
             .WithMany()
             .HasForeignKey(x => x.SubDepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne<EmployeePositionEntity>()
-            .WithMany()
+        
+        builder.HasOne(x => x.ReportToPosition)
+            .WithMany(p => p.ChildPositions)
             .HasForeignKey(x => x.ReportToPositionId)
             .OnDelete(DeleteBehavior.Restrict);
     }

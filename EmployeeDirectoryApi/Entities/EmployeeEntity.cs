@@ -5,7 +5,8 @@ public class EmployeeEntity : BaseEntity
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
-    public long? PositionId { get; private set; }
+    public long PositionId { get; private set; }
+    public EmployeePositionEntity Position { get; private set; }
     public string? AvatarUrl { get; private set; }
     
     public EmployeeEntity( ) {}
@@ -14,12 +15,14 @@ public class EmployeeEntity : BaseEntity
         string firstName,
         string lastName,
         string email,
+        long positionId,
         string? avatarUrl
     )
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
+        PositionId = positionId;
         AvatarUrl = avatarUrl;
     }
 

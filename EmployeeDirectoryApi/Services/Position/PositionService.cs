@@ -1,7 +1,7 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos.Positions;
 using EmployeeDirectoryApi.Entities;
-using EmployeeDirectoryApi.Services.Position.Interface;
+using EmployeeDirectoryApi.Services.Position.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.Position;

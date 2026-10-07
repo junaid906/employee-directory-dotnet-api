@@ -4,8 +4,15 @@ public class EmployeePositionEntity : BaseEntity
 {
     public string JobTitle { get; private set; }
     public long DepartmentId { get; private set; }
+    public DepartmentEntity? Department { get; private set; }
     public long? SubDepartmentId { get; private set; }
+    public SubDepartmentEntity? SubDepartment { get; private set; }
     public long? ReportToPositionId { get; private set; }
+    public EmployeePositionEntity? ReportToPosition { get; private set; }
+
+    public ICollection<EmployeePositionEntity> ChildPositions { get; } = new List<EmployeePositionEntity>();
+    public ICollection<EmployeeEntity> SiblingEmployees { get; } = new List<EmployeeEntity>();
+
     public int SeatingPosition { get; private set; }
     
     public EmployeePositionEntity( ){}

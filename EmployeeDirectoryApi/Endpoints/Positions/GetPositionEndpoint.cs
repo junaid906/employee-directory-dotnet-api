@@ -1,5 +1,5 @@
 using EmployeeDirectoryApi.Dtos.Positions;
-using EmployeeDirectoryApi.Services.Position.Interface;
+using EmployeeDirectoryApi.Services.Position.Interfaces;
 
 namespace EmployeeDirectoryApi.Endpoints.Positions;
 

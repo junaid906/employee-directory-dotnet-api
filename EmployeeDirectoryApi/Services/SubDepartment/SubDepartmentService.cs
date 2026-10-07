@@ -1,6 +1,6 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos.SubDepartments;
-using EmployeeDirectoryApi.Services.SubDepartment.Interface;
+using EmployeeDirectoryApi.Services.SubDepartment.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.SubDepartment;

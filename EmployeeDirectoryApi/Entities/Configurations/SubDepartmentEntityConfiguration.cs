@@ -27,10 +27,11 @@ public class SubDepartmentEntityConfiguration : IEntityTypeConfiguration<SubDepa
         
         builder.HasIndex(x => new { x.DepartmentId, x.SubDepartmentName })
             .IsUnique();
-
-        builder.HasOne<DepartmentEntity>()
+        
+        builder.HasOne(x => x.Department)
             .WithMany()
             .HasForeignKey(x => x.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

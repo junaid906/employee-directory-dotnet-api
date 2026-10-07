@@ -38,8 +38,8 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");
 
-        builder.HasOne<EmployeePositionEntity>()
-            .WithMany()
+        builder.HasOne(x => x.Position)
+            .WithMany(p => p.SiblingEmployees)
             .HasForeignKey(x => x.PositionId)
             .OnDelete(DeleteBehavior.Restrict);
     }

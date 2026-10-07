@@ -1,5 +1,5 @@
 using EmployeeDirectoryApi.Dtos.Departments;
-using EmployeeDirectoryApi.Services.Department.Interface;
+using EmployeeDirectoryApi.Services.Department.Interfaces;
 
 namespace EmployeeDirectoryApi.Endpoints.Departments;
 

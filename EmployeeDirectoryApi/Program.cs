@@ -5,13 +5,13 @@ using EmployeeDirectoryApi.Endpoints.Employees;
 using EmployeeDirectoryApi.Endpoints.Positions;
 using EmployeeDirectoryApi.Endpoints.SubDepartments;
 using EmployeeDirectoryApi.Services.Department;
-using EmployeeDirectoryApi.Services.Department.Interface;
+using EmployeeDirectoryApi.Services.Department.Interfaces;
 using EmployeeDirectoryApi.Services.Employee;
 using EmployeeDirectoryApi.Services.Employee.Interfaces;
 using EmployeeDirectoryApi.Services.Position;
-using EmployeeDirectoryApi.Services.Position.Interface;
+using EmployeeDirectoryApi.Services.Position.Interfaces;
 using EmployeeDirectoryApi.Services.SubDepartment;
-using EmployeeDirectoryApi.Services.SubDepartment.Interface;
+using EmployeeDirectoryApi.Services.SubDepartment.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,8 +55,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/", () => "Hello World!");
-app.MapGetEmployees();
+app.MapEmployees();
 app.MapPositions();
 app.MapDepartments();
 app.MapSubDepartments();
