@@ -31,6 +31,9 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<EmployeeEnti
         
         builder.Property(x => x.AvatarUrl)
             .HasMaxLength(500);
+        
+        builder.Property(x => x.Role)
+            .IsRequired();
 
         builder.HasIndex(x => x.Email)
             .IsUnique();

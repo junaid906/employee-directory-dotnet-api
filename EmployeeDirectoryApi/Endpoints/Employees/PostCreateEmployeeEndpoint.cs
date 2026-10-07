@@ -3,7 +3,7 @@ using EmployeeDirectoryApi.Services.Employee.Interfaces;
 
 namespace EmployeeDirectoryApi.Endpoints.Employees;
 
-public sealed class PostEmployeeEndpoint : IEndpoint
+public sealed class PostCreateEmployeeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {

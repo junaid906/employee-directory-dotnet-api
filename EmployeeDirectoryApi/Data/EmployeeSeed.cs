@@ -229,7 +229,9 @@ public static class EmployeeSeed
                 lastName,
                 email,
                 positionIdByRow[row.Index],
-                $"https://i.pravatar.cc/300?u={email}");
+                $"https://i.pravatar.cc/300?u={email}",
+                2
+                );
 
             employee.SetId(row.Index);
             employee.SetUniqueId(Guid.NewGuid());

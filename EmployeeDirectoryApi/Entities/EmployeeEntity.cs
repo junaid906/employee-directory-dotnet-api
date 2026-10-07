@@ -8,6 +8,7 @@ public class EmployeeEntity : BaseEntity
     public long PositionId { get; private set; }
     public EmployeePositionEntity Position { get; private set; }
     public string? AvatarUrl { get; private set; }
+    public int Role { get; private set; }
     
     public EmployeeEntity( ) {}
 
@@ -16,7 +17,8 @@ public class EmployeeEntity : BaseEntity
         string lastName,
         string email,
         long positionId,
-        string? avatarUrl
+        string? avatarUrl,
+        int role
     )
     {
         FirstName = firstName;
@@ -24,6 +26,7 @@ public class EmployeeEntity : BaseEntity
         Email = email;
         PositionId = positionId;
         AvatarUrl = avatarUrl;
+        Role = role;
     }
 
     public void UpdatePositionId(long positionId)

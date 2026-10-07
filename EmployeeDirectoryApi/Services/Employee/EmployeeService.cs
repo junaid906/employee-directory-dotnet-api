@@ -83,7 +83,9 @@ public class EmployeeService : IEmployeeService
             createEmployeeDto.LastName,
             createEmployeeDto.Email,
             positionId.Value,
-            createEmployeeDto.AvatarUrl);
+            createEmployeeDto.AvatarUrl,
+            createEmployeeDto.Role
+            );
 
         _dbContext.Employees.Add(employee);
         await _dbContext.SaveChangesAsync(ct);
@@ -91,5 +93,26 @@ public class EmployeeService : IEmployeeService
         return EmployeeDto.FromEntity(employee, createEmployeeDto.PositionUniqueId);
     }
 
+    #endregion
+    
+    #region Deactivate Employee
+
+    public async Task<bool> DeactivateEmployee(Guid uniqueId, CancellationToken ct = default)
+    {
+        var employee = await _dbContext.Employees
+            .FirstOrDefaultAsync(e => e.UniqueId == uniqueId && e.Active, ct);
+
+        if (employee is null)
+        {
+            return false;
+        }
+        
+        employee.Deactivate();
+        employee.IsUpdated();
+        await _dbContext.SaveChangesAsync(ct);
+        
+        return true;
+    }
+    
     #endregion
 }
