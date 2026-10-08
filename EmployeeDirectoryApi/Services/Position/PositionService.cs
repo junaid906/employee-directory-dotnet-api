@@ -15,8 +15,6 @@ public class PositionService : IPositionService
         _dbContext = dbContext;
     }
 
-    #region Get All Positions
-
     public async Task<List<PositionDto>> GetAllPositions(CancellationToken ct = default)
     {
         var positions = await _dbContext.EmployeePositions
@@ -42,10 +40,6 @@ public class PositionService : IPositionService
                 p.ReportToPositionId is { } parentId && uniqueIdByPositionId.TryGetValue(parentId, out var parentUniqueId) ? parentUniqueId : null))
             .ToList();
     }
-
-    #endregion
-
-    #region Get Position
 
     public async Task<PositionDto?> GetPosition(Guid uniqueId, CancellationToken ct = default)
     {
@@ -84,10 +78,6 @@ public class PositionService : IPositionService
 
         return Map(position, departmentUniqueId, subDepartmentUniqueId, reportToPositionUniqueId);
     }
-
-    #endregion
-
-    #region Create Position
 
     public async Task<PositionDto> CreatePosition(CreatePositionDto createPositionDto, CancellationToken ct = default)
     {
@@ -145,8 +135,6 @@ public class PositionService : IPositionService
             createPositionDto.SubDepartmentUniqueId,
             createPositionDto.ReportToPositionUniqueId);
     }
-
-    #endregion
 
     private static PositionDto Map(
         EmployeePositionEntity position,

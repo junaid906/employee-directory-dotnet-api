@@ -14,8 +14,6 @@ public class DepartmentService : IDepartmentService
         _dbContext = dbContext;
     }
 
-    #region Get All Departments
-
     public async Task<List<DepartmentDto>> GetAllDepartments(CancellationToken ct = default)
     {
         return await _dbContext.Departments
@@ -28,6 +26,4 @@ public class DepartmentService : IDepartmentService
             })
             .ToListAsync(ct);
     }
-
-    #endregion
 }

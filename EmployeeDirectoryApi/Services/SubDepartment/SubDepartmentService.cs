@@ -14,8 +14,6 @@ public class SubDepartmentService : ISubDepartmentService
         _dbContext = dbContext;
     }
 
-    #region Get All SubDepartments
-
     public async Task<List<SubDepartmentDto>> GetAllSubDepartments(CancellationToken ct = default)
     {
         var subDepartments = await _dbContext.SubDepartments
@@ -36,6 +34,4 @@ public class SubDepartmentService : ISubDepartmentService
             })
             .ToList();
     }
-
-    #endregion
 }

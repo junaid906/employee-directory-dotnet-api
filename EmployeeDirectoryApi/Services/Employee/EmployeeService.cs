@@ -15,8 +15,6 @@ public class EmployeeService : IEmployeeService
         _dbContext = dbContext;
     }
 
-    #region Get All Employees
-
     public async Task<List<EmployeeDto>> GetAllEmployees(CancellationToken ct = default)
     {
         return await _dbContext.Employees
@@ -26,10 +24,6 @@ public class EmployeeService : IEmployeeService
             .ToListAsync(ct);
     }
 
-    #endregion
-
-    #region Get Employee
-
     public async Task<DetailedEmployeeDto?> GetEmployee(Guid uniqueId, CancellationToken ct = default)
     {
         return await _dbContext.Employees
@@ -38,10 +32,6 @@ public class EmployeeService : IEmployeeService
             .Select(DetailedEmployeeDto.QueryProjection)
             .FirstOrDefaultAsync(ct);
     }
-
-    #endregion
-
-    #region Get Managers
 
     public async Task<List<ManagerSummaryDto>> GetManagersSummarised(CancellationToken ct = default)
     {
@@ -61,10 +51,6 @@ public class EmployeeService : IEmployeeService
             })
             .ToListAsync(ct);
     }
-
-    #endregion
-
-    #region Create Employee
 
     public async Task<EmployeeDto> CreateEmployee(CreateEmployeeDto createEmployeeDto, CancellationToken ct = default)
     {
@@ -93,10 +79,6 @@ public class EmployeeService : IEmployeeService
         return EmployeeDto.FromEntity(employee, createEmployeeDto.PositionUniqueId);
     }
 
-    #endregion
-    
-    #region Deactivate Employee
-
     public async Task<bool> DeactivateEmployee(Guid uniqueId, CancellationToken ct = default)
     {
         var employee = await _dbContext.Employees
@@ -113,6 +95,4 @@ public class EmployeeService : IEmployeeService
         
         return true;
     }
-    
-    #endregion
 }
