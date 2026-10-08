@@ -42,12 +42,12 @@ public class EmployeePositionEntity : BaseEntity
         DepartmentId = departmentId;
     }
     
-    public void UpdateSubDepartmentId(long subDepartmentId)
+    public void UpdateSubDepartmentId(long? subDepartmentId)
     {
         SubDepartmentId = subDepartmentId;
     }
 
-    public void UpdateReportToPositionId(long reportToPositionId)
+    public void UpdateReportToPositionId(long? reportToPositionId)
     {
         ReportToPositionId = reportToPositionId;
     }

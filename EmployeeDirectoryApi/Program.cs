@@ -4,14 +4,11 @@ using EmployeeDirectoryApi.Endpoints.Departments;
 using EmployeeDirectoryApi.Endpoints.Employees;
 using EmployeeDirectoryApi.Endpoints.Positions;
 using EmployeeDirectoryApi.Endpoints.SubDepartments;
+using EmployeeDirectoryApi.Handlers;
 using EmployeeDirectoryApi.Services.Department;
-using EmployeeDirectoryApi.Services.Department.Interfaces;
 using EmployeeDirectoryApi.Services.Employee;
-using EmployeeDirectoryApi.Services.Employee.Interfaces;
 using EmployeeDirectoryApi.Services.Position;
-using EmployeeDirectoryApi.Services.Position.Interfaces;
 using EmployeeDirectoryApi.Services.SubDepartment;
-using EmployeeDirectoryApi.Services.SubDepartment.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,14 +25,17 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<EmployeeDirectoryDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Employees")));
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IPositionService, PositionService>();
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
-builder.Services.AddScoped<ISubDepartmentService, SubDepartmentService>();
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<PositionService>();
+builder.Services.AddScoped<DepartmentService>();
+builder.Services.AddScoped<SubDepartmentService>();
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
 
 // remove this shit later
 using (var scope = app.Services.CreateScope())

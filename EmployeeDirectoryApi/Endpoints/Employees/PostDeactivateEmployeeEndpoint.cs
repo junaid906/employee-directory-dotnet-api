@@ -1,4 +1,4 @@
-using EmployeeDirectoryApi.Services.Employee.Interfaces;
+using EmployeeDirectoryApi.Services.Employee;
 
 namespace EmployeeDirectoryApi.Endpoints.Employees;
 
@@ -7,7 +7,7 @@ public class PostDeactivateEmployeeEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {
         endpoint.MapPost("/employees/deactivate-employee/{uniqueId:guid}",
-            async (Guid uniqueId, IEmployeeService service, CancellationToken ct) =>
+            async (Guid uniqueId, EmployeeService service, CancellationToken ct) =>
             {
                 var deactivatedEmployee = await service.DeactivateEmployee(uniqueId, ct);
                 return deactivatedEmployee ? Results.NoContent() : Results.NotFound();

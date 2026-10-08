@@ -1,11 +1,10 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos.SubDepartments;
-using EmployeeDirectoryApi.Services.SubDepartment.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.SubDepartment;
 
-public class SubDepartmentService : ISubDepartmentService
+public class SubDepartmentService
 {
     private readonly EmployeeDirectoryDbContext _dbContext;
 
@@ -19,19 +18,9 @@ public class SubDepartmentService : ISubDepartmentService
         var subDepartments = await _dbContext.SubDepartments
             .AsNoTracking()
             .Where(s => s.Active)
+            .Select(SubDepartmentDto.QueryProjection)
             .ToListAsync(ct);
 
-        var uniqueIdByDepartmentId = await _dbContext.Departments
-            .AsNoTracking()
-            .ToDictionaryAsync(d => d.Id, d => d.UniqueId, ct);
-
-        return subDepartments
-            .Select(s => new SubDepartmentDto
-            {
-                UniqueId = s.UniqueId,
-                SubDepartmentName = s.SubDepartmentName,
-                DepartmentUniqueId = uniqueIdByDepartmentId[s.DepartmentId]
-            })
-            .ToList();
+        return subDepartments;
     }
 }

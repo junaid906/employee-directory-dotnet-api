@@ -3,17 +3,17 @@ using EmployeeDirectoryApi.Services.Position;
 
 namespace EmployeeDirectoryApi.Endpoints.Positions;
 
-public sealed class CreatePositionEndpoint : IEndpoint
+public sealed class PostInsertPositionEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {
-        endpoint.MapPost("/positions",
-                async (CreatePositionDto createPositionDto, PositionService service, CancellationToken ct) =>
+        endpoint.MapPost("/positions/insert-between",
+                async (InsertPositionDto insertPositionDto, PositionService service, CancellationToken ct) =>
                 {
-                    var position = await service.CreatePosition(createPositionDto, ct);
+                    var position = await service.InsertPosition(insertPositionDto, ct);
                     return Results.Created($"/positions/{position.UniqueId}", position);
                 })
-            .WithName("CreatePosition")
+            .WithName("InsertPosition")
             .WithTags("Positions")
             .Produces<PositionDto>(StatusCodes.Status201Created);
     }

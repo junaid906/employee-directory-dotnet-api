@@ -1,5 +1,5 @@
 using EmployeeDirectoryApi.Dtos.Employees;
-using EmployeeDirectoryApi.Services.Employee.Interfaces;
+using EmployeeDirectoryApi.Services.Employee;
 
 namespace EmployeeDirectoryApi.Endpoints.Employees;
 
@@ -8,9 +8,9 @@ public sealed class GetEmployeeEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder endpoint)
     {
         endpoint.MapGet("/employees/{uniqueId:guid}", async (
-                Guid uniqueId, IEmployeeService service, CancellationToken ct) =>
+                Guid uniqueId, EmployeeService service, CancellationToken ct) =>
             {
-                var employee = await service.GetEmployee(uniqueId, ct);
+                var employee = await service.GetDetailedEmployee(uniqueId, ct);
                 return employee is null ? Results.NotFound() : Results.Ok(employee);
             })
             .WithName("GetEmployee")

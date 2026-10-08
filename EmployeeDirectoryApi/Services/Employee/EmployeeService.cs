@@ -1,12 +1,11 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos.Employees;
 using EmployeeDirectoryApi.Entities;
-using EmployeeDirectoryApi.Services.Employee.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.Employee;
 
-public class EmployeeService : IEmployeeService
+public class EmployeeService
 {
     private readonly EmployeeDirectoryDbContext _dbContext;
 
@@ -15,16 +14,56 @@ public class EmployeeService : IEmployeeService
         _dbContext = dbContext;
     }
 
-    public async Task<List<EmployeeDto>> GetAllEmployees(CancellationToken ct = default)
+    public async Task<List<EmployeeDto>> GetAllEmployees(EmployeeFilters filters, CancellationToken ct = default)
     {
-        return await _dbContext.Employees
+        var query = _dbContext.Employees
             .AsNoTracking()
-            .Where(e => e.Active)
+            .Where(e => e.Active);
+
+        if (!string.IsNullOrWhiteSpace(filters.Search))
+        {
+            var tokens = filters.Search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var token in tokens)
+            {
+                var pattern = $"%{token}%";
+                query = query.Where(e => EF.Functions.ILike(e.FirstName, pattern)
+                                         || EF.Functions.ILike(e.LastName, pattern)
+                                         || EF.Functions.ILike(e.Email, pattern));
+            }
+        }
+        
+        // decision needed for if deactivated employees should be visible
+        
+        // if (filters.IsActive.HasValue)
+        // {
+        //     query = query.Where(e => e.Active == filters.IsActive);
+        // }
+        
+        if (filters.DepartmentUniqueId is { } departmentUniqueId)
+        {
+            query = query.Where(e => e.Position.Department!.UniqueId == departmentUniqueId);
+        }
+        if (filters.PositionUniqueId is { } positionUniqueId)
+        {
+            query = query.Where(e => e.Position.UniqueId == positionUniqueId);
+        }
+        if (filters.SubDepartmentUniqueId is { } subDepartmentUniqueId)
+        {
+            query = query.Where(e => e.Position.SubDepartment!.UniqueId == subDepartmentUniqueId);
+        }
+        if (filters.Role is { } role)
+        {
+            query = query.Where(e => e.Role == role);
+        }
+        
+        return await query
             .Select(EmployeeDto.QueryProjection)
+            .OrderBy(e => e.FirstName)
+            .ThenBy(e => e.LastName)
             .ToListAsync(ct);
     }
 
-    public async Task<DetailedEmployeeDto?> GetEmployee(Guid uniqueId, CancellationToken ct = default)
+    public async Task<DetailedEmployeeDto?> GetDetailedEmployee(Guid uniqueId, CancellationToken ct = default)
     {
         return await _dbContext.Employees
             .AsNoTracking()
@@ -43,12 +82,7 @@ public class EmployeeService : IEmployeeService
             .AsNoTracking()
             .Where(e => e.Active
                         && parentPositionIds.Contains(e.PositionId))
-            .Select(e => new ManagerSummaryDto
-            {
-                UniqueId = e.UniqueId,
-                FirstName = e.FirstName,
-                LastName = e.LastName
-            })
+            .Select(ManagerSummaryDto.QueryProjection)
             .ToListAsync(ct);
     }
 
