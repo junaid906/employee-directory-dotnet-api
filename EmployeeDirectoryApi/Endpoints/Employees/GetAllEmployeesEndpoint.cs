@@ -14,4 +14,4 @@ public sealed class GetAllEmployeesEndpoint : IEndpoint
             .WithTags("Employees")
             .Produces<List<EmployeeDto>>();
     }
-}
+}    
