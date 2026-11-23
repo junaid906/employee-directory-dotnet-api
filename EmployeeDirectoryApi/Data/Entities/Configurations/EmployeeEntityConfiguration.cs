@@ -18,19 +18,15 @@ public class EmployeeEntityConfiguration : IEntityTypeConfiguration<Employee>
             .ValueGeneratedOnAdd();
         
         builder.Property(x => x.FirstName)
-            .HasMaxLength(100)
             .IsRequired();
         
         builder.Property(x => x.LastName)
-            .HasMaxLength(100)
             .IsRequired();
         
         builder.Property(x => x.Email)
-            .HasMaxLength(100)
             .IsRequired();
-        
-        builder.Property(x => x.AvatarUrl)
-            .HasMaxLength(500);
+
+        builder.Property(x => x.AvatarUrl);
         
         builder.Property(x => x.Role)
             .IsRequired();

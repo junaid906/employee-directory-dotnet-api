@@ -19,8 +19,7 @@ public class DepartmentEntityConfiguration : IEntityTypeConfiguration<Department
 
 
         builder.Property(x => x.DepartmentName)
-            .IsRequired()
-            .HasMaxLength(50);
+            .IsRequired();
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");

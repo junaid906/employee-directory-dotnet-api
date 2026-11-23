@@ -19,7 +19,6 @@ public class SubDepartmentEntityConfiguration : IEntityTypeConfiguration<SubDepa
 
 
         builder.Property(x => x.SubDepartmentName)
-            .HasMaxLength(200)
             .IsRequired();
         
         builder.Property(x => x.CreatedAt)

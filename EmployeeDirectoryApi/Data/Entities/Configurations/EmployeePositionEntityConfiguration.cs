@@ -18,8 +18,7 @@ public class EmployeePositionEntityConfiguration : IEntityTypeConfiguration<Empl
             .ValueGeneratedOnAdd();
         
         builder.Property(x => x.JobTitle)
-            .IsRequired()
-            .HasMaxLength(50);
+            .IsRequired();
 
         builder.Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");
