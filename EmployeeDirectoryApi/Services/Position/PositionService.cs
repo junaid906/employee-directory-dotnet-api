@@ -39,7 +39,7 @@ public class PositionService
         var subDepartmentId = await ResolveSubDepartmentId(createPositionDto.SubDepartmentUniqueId, ct);
         var reportToPositionId = await ResolvePositionId(createPositionDto.ReportToPositionUniqueId, ct);
 
-        var position = new EmployeePositionEntity(
+        var position = new EmployeePosition(
             createPositionDto.JobTitle,
             departmentId,
             subDepartmentId,
@@ -69,7 +69,7 @@ public class PositionService
 
         await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
 
-        var position = new EmployeePositionEntity(
+        var position = new EmployeePosition(
             insertPositionDto.JobTitle,
             departmentId,
             subDepartmentId,
@@ -111,30 +111,74 @@ public class PositionService
 
         var departmentId = await ResolveDepartmentId(updatePositionDto.DepartmentUniqueId, ct);
         var subDepartmentId = await ResolveSubDepartmentId(updatePositionDto.SubDepartmentUniqueId, ct);
-        var reportToPositionId = await ResolvePositionId(updatePositionDto.ReportToPositionUniqueId, ct);
-
-        if (reportToPositionId != position.ReportToPositionId)
-        {
-            await EnsureNoCycle(position.Id, reportToPositionId, ct);
-        }
 
         position.UpdateJobTitle(updatePositionDto.JobTitle);
         position.UpdateDepartmentId(departmentId);
         position.UpdateSubDepartmentId(subDepartmentId);
-        position.UpdateReportToPositionId(reportToPositionId);
         position.UpdateSeatingPosition(updatePositionDto.SeatingPosition);
         position.IsUpdated();
 
         await _dbContext.SaveChangesAsync(ct);
 
+        var reportToPositionUniqueId = await _dbContext.EmployeePositions
+            .Where(p => p.Id == position.ReportToPositionId)
+            .Select(p => (Guid?)p.UniqueId)
+            .FirstOrDefaultAsync(ct);
+
         return PositionDto.FromEntity(
             position,
             updatePositionDto.DepartmentUniqueId,
             updatePositionDto.SubDepartmentUniqueId,
-            updatePositionDto.ReportToPositionUniqueId);
+            reportToPositionUniqueId);
     }
 
-    private async Task<List<EmployeePositionEntity>> LoadChildrenToReassign(
+    public async Task ReparentPositions(ReparentPositionsDto reparentPositionsDto, CancellationToken ct = default)
+    {
+        if (reparentPositionsDto.ChildPositionUniqueIds.Count == 0)
+        {
+            throw new ArgumentException("At least one position must be specified to reparent.");
+        }
+
+        var reportToPositionId = await ResolvePositionId(reparentPositionsDto.ReportToPositionUniqueId, ct)
+            ?? throw new ArgumentException($"No position found for {reparentPositionsDto.ReportToPositionUniqueId}");
+
+        var distinctIds = reparentPositionsDto.ChildPositionUniqueIds.Distinct().ToList();
+
+        var children = await _dbContext.EmployeePositions
+            .Where(p => p.Active && distinctIds.Contains(p.UniqueId))
+            .ToListAsync(ct);
+
+        if (children.Count != distinctIds.Count)
+        {
+            var found = children.Select(child => child.UniqueId).ToHashSet();
+            var missing = distinctIds.Where(id => !found.Contains(id));
+            throw new ArgumentException($"Position(s) not found: {string.Join(", ", missing)}");
+        }
+
+        var movedPositionIds = children.Select(child => child.Id).ToHashSet();
+
+        if (movedPositionIds.Contains(reportToPositionId))
+        {
+            throw new PositionCycleException("A position cannot report to itself.");
+        }
+
+        var ancestorPositionIds = await GetAncestorIds(reportToPositionId, ct);
+
+        if (ancestorPositionIds.Overlaps(movedPositionIds))
+        {
+            throw new PositionCycleException("This change would create a cycle in the reporting structure.");
+        }
+
+        foreach (var child in children)
+        {
+            child.UpdateReportToPositionId(reportToPositionId);
+            child.IsUpdated();
+        }
+
+        await _dbContext.SaveChangesAsync(ct);
+    }
+
+    private async Task<List<EmployeePosition>> LoadChildrenToReassign(
         List<Guid> childPositionUniqueIds,
         long? reportToPositionId,
         CancellationToken ct)
@@ -176,45 +220,26 @@ public class PositionService
         return children;
     }
 
-    private async Task EnsureNoCycle(long positionId, long? newParentId, CancellationToken ct)
+    private async Task<HashSet<long>> GetAncestorIds(long positionId, CancellationToken ct)
     {
-        if (newParentId is null)
-        {
-            return;
-        }
-
-        if (newParentId == positionId)
-        {
-            throw new PositionCycleException("A position cannot report to itself.");
-        }
-
         var parentByPositionId = await _dbContext.EmployeePositions
             .AsNoTracking()
             .Select(p => new { p.Id, p.ReportToPositionId })
             .ToDictionaryAsync(p => p.Id, p => p.ReportToPositionId, ct);
 
-        var visited = new HashSet<long>();
-        var currentId = newParentId.Value;
+        var ancestorIds = new HashSet<long>();
 
-        while (true)
+        if (!parentByPositionId.TryGetValue(positionId, out var parentId))
         {
-            if (currentId == positionId)
-            {
-                throw new PositionCycleException("This change would create a cycle in the reporting structure.");
-            }
-
-            if (!visited.Add(currentId))
-            {
-                return;
-            }
-
-            if (!parentByPositionId.TryGetValue(currentId, out var parentId) || parentId is null)
-            {
-                return;
-            }
-
-            currentId = parentId.Value;
+            return ancestorIds;
         }
+
+        while (parentId is not null && ancestorIds.Add(parentId.Value))
+        {
+            parentId = parentByPositionId.GetValueOrDefault(parentId.Value);
+        }
+
+        return ancestorIds;
     }
 
     private async Task<long> ResolveDepartmentId(Guid uniqueId, CancellationToken ct)

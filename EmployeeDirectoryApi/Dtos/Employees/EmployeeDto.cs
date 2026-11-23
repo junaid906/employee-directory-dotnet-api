@@ -12,7 +12,7 @@ public class EmployeeDto
     public required Guid PositionUniqueId { get; init; }
     public string? AvatarUrl { get; init; }
 
-    public static Expression<Func<EmployeeEntity, EmployeeDto>> QueryProjection => employee => new EmployeeDto
+    public static Expression<Func<Employee, EmployeeDto>> QueryProjection => employee => new EmployeeDto
     {
         UniqueId = employee.UniqueId,
         FirstName = employee.FirstName,
@@ -22,7 +22,7 @@ public class EmployeeDto
         AvatarUrl = employee.AvatarUrl
     };
 
-    public static EmployeeDto FromEntity(EmployeeEntity employee, Guid positionUniqueId) => new()
+    public static EmployeeDto FromEntity(Employee employee, Guid positionUniqueId) => new()
     {
         UniqueId = employee.UniqueId,
         FirstName = employee.FirstName,

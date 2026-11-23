@@ -1,6 +1,5 @@
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Dtos.Employees;
-using EmployeeDirectoryApi.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeDirectoryApi.Services.Employee;
@@ -23,6 +22,7 @@ public class EmployeeService
         if (!string.IsNullOrWhiteSpace(filters.Search))
         {
             var tokens = filters.Search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+           
             foreach (var token in tokens)
             {
                 var pattern = $"%{token}%";
@@ -31,29 +31,22 @@ public class EmployeeService
                                          || EF.Functions.ILike(e.Email, pattern));
             }
         }
-        
-        // decision needed for if deactivated employees should be visible
-        
-        // if (filters.IsActive.HasValue)
-        // {
-        //     query = query.Where(e => e.Active == filters.IsActive);
-        // }
-        
-        if (filters.DepartmentUniqueId is { } departmentUniqueId)
+
+        if (filters.DepartmentUniqueId is not null)
         {
-            query = query.Where(e => e.Position.Department!.UniqueId == departmentUniqueId);
+            query = query.Where(e => e.Position.Department!.UniqueId == filters.DepartmentUniqueId);
         }
-        if (filters.PositionUniqueId is { } positionUniqueId)
+        if (filters.PositionUniqueId is not null)
         {
-            query = query.Where(e => e.Position.UniqueId == positionUniqueId);
+            query = query.Where(e => e.Position.UniqueId == filters.PositionUniqueId);
         }
-        if (filters.SubDepartmentUniqueId is { } subDepartmentUniqueId)
+        if (filters.SubDepartmentUniqueId is not null)
         {
-            query = query.Where(e => e.Position.SubDepartment!.UniqueId == subDepartmentUniqueId);
+            query = query.Where(e => e.Position.SubDepartment!.UniqueId == filters.SubDepartmentUniqueId);
         }
-        if (filters.Role is { } role)
+        if (filters.Role is not null)
         {
-            query = query.Where(e => e.Role == role);
+            query = query.Where(e => e.Role == filters.Role);
         }
         
         return await query
@@ -98,7 +91,7 @@ public class EmployeeService
             throw new ArgumentException($"No position found for {createEmployeeDto.PositionUniqueId}");
         }
 
-        var employee = new EmployeeEntity(
+        var employee = new Entities.Employee(
             createEmployeeDto.FirstName,
             createEmployeeDto.LastName,
             createEmployeeDto.Email,

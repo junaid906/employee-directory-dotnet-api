@@ -19,7 +19,7 @@ public class DetailedEmployeeDto
     public SubDepartmentDto? SubDepartment { get; init; }
 
     public static DetailedEmployeeDto FromEntity(
-        EmployeeEntity employee,
+        Employee employee,
         PositionDto? position,
         DepartmentDto? department,
         SubDepartmentDto? subDepartment) => new()
@@ -34,7 +34,7 @@ public class DetailedEmployeeDto
         SubDepartment = subDepartment
     };
 
-    public static Expression<Func<EmployeeEntity, DetailedEmployeeDto>> QueryProjection => e =>
+    public static Expression<Func<Employee, DetailedEmployeeDto>> QueryProjection => e =>
         new DetailedEmployeeDto()
         {
             UniqueId = e.UniqueId,
@@ -48,8 +48,8 @@ public class DetailedEmployeeDto
                 UniqueId = e.Position.UniqueId,
                 JobTitle = e.Position.JobTitle,
                 DepartmentUniqueId = e.Position.Department!.UniqueId,
-                SubDepartmentUniqueId = e.Position.SubDepartment == null ? (Guid?)null : e.Position.SubDepartment.UniqueId,
-                ReportToPositionUniqueId = e.Position.ReportToPosition == null ? (Guid?)null : e.Position.ReportToPosition.UniqueId,
+                SubDepartmentUniqueId = e.Position.SubDepartment == null ? null : e.Position.SubDepartment.UniqueId,
+                ReportToPositionUniqueId = e.Position.ReportToPosition == null ? null : e.Position.ReportToPosition.UniqueId,
                 SeatingPosition = e.Position.SeatingPosition
             },
             

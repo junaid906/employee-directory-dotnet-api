@@ -8,10 +8,10 @@ public class EmployeeDirectoryDbContext : DbContext
     public EmployeeDirectoryDbContext(DbContextOptions<EmployeeDirectoryDbContext> options)
         : base(options){}
     
-    public DbSet<EmployeeEntity> Employees => Set<EmployeeEntity>();
-    public DbSet<EmployeePositionEntity> EmployeePositions => Set<EmployeePositionEntity>();
-    public DbSet<DepartmentEntity> Departments => Set<DepartmentEntity>();
-    public DbSet<SubDepartmentEntity> SubDepartments => Set<SubDepartmentEntity>();
+    public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<EmployeePosition> EmployeePositions => Set<EmployeePosition>();
+    public DbSet<Department> Departments => Set<Department>();
+    public DbSet<SubDepartment> SubDepartments => Set<SubDepartment>();
     
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

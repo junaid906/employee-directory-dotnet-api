@@ -1,12 +1,12 @@
 namespace EmployeeDirectoryApi.Entities;
 
-public class DepartmentEntity : BaseEntity
+public class Department : BaseEntity
 {
     public string DepartmentName { get; private set; }
     
-    public DepartmentEntity( ){}
+    public Department( ){}
     
-    public DepartmentEntity(
+    public Department(
         string departmentName
     )
     {

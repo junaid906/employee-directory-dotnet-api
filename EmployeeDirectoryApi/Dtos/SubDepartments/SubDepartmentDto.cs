@@ -9,7 +9,7 @@ public class SubDepartmentDto
     public required string SubDepartmentName { get; init; }
     public required Guid DepartmentUniqueId { get; init; }
 
-    public static Expression<Func<SubDepartmentEntity, SubDepartmentDto>> QueryProjection => subDepartment => new SubDepartmentDto
+    public static Expression<Func<SubDepartment, SubDepartmentDto>> QueryProjection => subDepartment => new SubDepartmentDto
     {
         UniqueId = subDepartment.UniqueId,
         SubDepartmentName = subDepartment.SubDepartmentName,

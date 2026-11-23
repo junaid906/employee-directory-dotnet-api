@@ -12,7 +12,7 @@ public class PositionDto
     public Guid? ReportToPositionUniqueId { get; init; }
     public required int SeatingPosition { get; init; }
 
-    public static Expression<Func<EmployeePositionEntity, PositionDto>> QueryProjection => position => new PositionDto
+    public static Expression<Func<EmployeePosition, PositionDto>> QueryProjection => position => new PositionDto
     {
         UniqueId = position.UniqueId,
         JobTitle = position.JobTitle,
@@ -23,7 +23,7 @@ public class PositionDto
     };
 
     public static PositionDto FromEntity(
-        EmployeePositionEntity position,
+        EmployeePosition position,
         Guid departmentUniqueId,
         Guid? subDepartmentUniqueId,
         Guid? reportToPositionUniqueId) => new()

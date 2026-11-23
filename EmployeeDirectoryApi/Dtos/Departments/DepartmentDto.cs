@@ -8,7 +8,7 @@ public class DepartmentDto
     public required Guid UniqueId { get; init; }
     public required string DepartmentName { get; init; }
 
-    public static Expression<Func<DepartmentEntity, DepartmentDto>> QueryProjection => department => new DepartmentDto
+    public static Expression<Func<Department, DepartmentDto>> QueryProjection => department => new DepartmentDto
     {
         UniqueId = department.UniqueId,
         DepartmentName = department.DepartmentName

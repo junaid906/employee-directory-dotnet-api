@@ -9,6 +9,7 @@ public static class PositionEndpoints
         new CreatePositionEndpoint().MapEndpoint(endpoint);
         new PostInsertPositionEndpoint().MapEndpoint(endpoint);
         new PutUpdatePositionEndpoint().MapEndpoint(endpoint);
+        new PostReparentPositionsEndpoint().MapEndpoint(endpoint);
 
         return endpoint;
     }

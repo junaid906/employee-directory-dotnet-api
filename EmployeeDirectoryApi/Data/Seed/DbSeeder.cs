@@ -18,9 +18,7 @@ public static class DbSeeder
 
         dbContext.SubDepartments.AddRange(seed.SubDepartments);
         await dbContext.SaveChangesAsync(ct);
-
-        // Insert positions first with no parent, then wire the tree, so the self-referencing
-        // foreign key never points at a row that has not been inserted yet.
+        
         dbContext.EmployeePositions.AddRange(seed.Positions);
         await dbContext.SaveChangesAsync(ct);
 

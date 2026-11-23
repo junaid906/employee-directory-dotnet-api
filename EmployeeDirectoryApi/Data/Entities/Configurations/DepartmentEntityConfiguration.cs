@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EmployeeDirectoryApi.Entities.Configurations;
 
-public class DepartmentEntityConfiguration : IEntityTypeConfiguration<DepartmentEntity>
+public class DepartmentEntityConfiguration : IEntityTypeConfiguration<Department>
 {
-    public void Configure(EntityTypeBuilder<DepartmentEntity> builder)
+    public void Configure(EntityTypeBuilder<Department> builder)
     {
         builder.ToTable("Departments");
         

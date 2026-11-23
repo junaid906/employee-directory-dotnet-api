@@ -1,23 +1,23 @@
 namespace EmployeeDirectoryApi.Entities;
 
-public class EmployeePositionEntity : BaseEntity
+public class EmployeePosition : BaseEntity
 {
     public string JobTitle { get; private set; }
     public long DepartmentId { get; private set; }
-    public DepartmentEntity? Department { get; private set; }
+    public Department? Department { get; private set; }
     public long? SubDepartmentId { get; private set; }
-    public SubDepartmentEntity? SubDepartment { get; private set; }
+    public SubDepartment? SubDepartment { get; private set; }
     public long? ReportToPositionId { get; private set; }
-    public EmployeePositionEntity? ReportToPosition { get; private set; }
+    public EmployeePosition? ReportToPosition { get; private set; }
 
-    public ICollection<EmployeePositionEntity> ChildPositions { get; } = new List<EmployeePositionEntity>();
-    public ICollection<EmployeeEntity> SiblingEmployees { get; } = new List<EmployeeEntity>();
+    public ICollection<EmployeePosition> ChildPositions { get; } = new List<EmployeePosition>();
+    public ICollection<Employee> SiblingEmployees { get; } = new List<Employee>();
 
     public int SeatingPosition { get; private set; }
     
-    public EmployeePositionEntity( ){}
+    public EmployeePosition( ){}
     
-    public EmployeePositionEntity(
+    public EmployeePosition(
         string jobTitle,
         long department,
         long? subDepartment,

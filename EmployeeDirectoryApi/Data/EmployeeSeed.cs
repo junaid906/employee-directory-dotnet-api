@@ -141,12 +141,12 @@ public static class EmployeeSeed
 
     public static SeedData Build()
     {
-        var departments = new List<DepartmentEntity>();
+        var departments = new List<Department>();
         var departmentIdByName = new Dictionary<string, long>();
 
         for (var i = 0; i < DepartmentNames.Length; i++)
         {
-            var department = new DepartmentEntity(DepartmentNames[i]);
+            var department = new Department(DepartmentNames[i]);
             department.SetId(i + 1);
             department.SetUniqueId(Guid.NewGuid());
 
@@ -155,13 +155,13 @@ public static class EmployeeSeed
         }
 
         // A subdepartment shares its name (and id) with the department of the same name.
-        var subDepartments = new List<SubDepartmentEntity>();
+        var subDepartments = new List<SubDepartment>();
         var subDepartmentIdByName = new Dictionary<string, long>();
 
         for (var i = 0; i < DepartmentNames.Length; i++)
         {
             var name = DepartmentNames[i];
-            var subDepartment = new SubDepartmentEntity(name, departmentIdByName[name]);
+            var subDepartment = new SubDepartment(name, departmentIdByName[name]);
             subDepartment.SetId(i + 1);
             subDepartment.SetUniqueId(Guid.NewGuid());
 
@@ -196,12 +196,12 @@ public static class EmployeeSeed
         }
 
         var random = new Random(20261006);
-        var positions = new List<EmployeePositionEntity>();
+        var positions = new List<EmployeePosition>();
         var positionParentByPositionId = new Dictionary<long, long>();
 
         foreach (var group in groups)
         {
-            var position = new EmployeePositionEntity(
+            var position = new EmployeePosition(
                 group.JobTitle,
                 departmentIdByName[group.SubDepartment],
                 subDepartmentIdByName[group.SubDepartment],
@@ -219,12 +219,12 @@ public static class EmployeeSeed
             }
         }
 
-        var employees = new List<EmployeeEntity>();
+        var employees = new List<Employee>();
         foreach (var row in rows)
         {
             var (firstName, lastName, email) = IdentityFor(row.Index);
 
-            var employee = new EmployeeEntity(
+            var employee = new Employee(
                 firstName,
                 lastName,
                 email,
@@ -269,9 +269,9 @@ public static class EmployeeSeed
 
 public sealed class SeedData
 {
-    public required List<DepartmentEntity> Departments { get; init; }
-    public required List<SubDepartmentEntity> SubDepartments { get; init; }
-    public required List<EmployeePositionEntity> Positions { get; init; }
-    public required List<EmployeeEntity> Employees { get; init; }
+    public required List<Department> Departments { get; init; }
+    public required List<SubDepartment> SubDepartments { get; init; }
+    public required List<EmployeePosition> Positions { get; init; }
+    public required List<Employee> Employees { get; init; }
     public required Dictionary<long, long> PositionParentByPositionId { get; init; }
 }

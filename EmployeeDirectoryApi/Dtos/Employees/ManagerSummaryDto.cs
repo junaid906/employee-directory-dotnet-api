@@ -9,7 +9,7 @@ public class ManagerSummaryDto
     public required string FirstName { get; init; }
     public required string LastName { get; init; }
 
-    public static Expression<Func<EmployeeEntity, ManagerSummaryDto>> QueryProjection => managerSummary => new ManagerSummaryDto
+    public static Expression<Func<Employee, ManagerSummaryDto>> QueryProjection => managerSummary => new ManagerSummaryDto
     {
         UniqueId = managerSummary.UniqueId,
         FirstName = managerSummary.FirstName,

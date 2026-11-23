@@ -1,18 +1,18 @@
 namespace EmployeeDirectoryApi.Entities;
 
-public class EmployeeEntity : BaseEntity
+public class Employee : BaseEntity
 {
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public long PositionId { get; private set; }
-    public EmployeePositionEntity Position { get; private set; }
+    public EmployeePosition Position { get; private set; }
     public string? AvatarUrl { get; private set; }
     public int Role { get; private set; }
     
-    public EmployeeEntity( ) {}
+    public Employee( ) {}
 
-    public EmployeeEntity(
+    public Employee(
         string firstName,
         string lastName,
         string email,
