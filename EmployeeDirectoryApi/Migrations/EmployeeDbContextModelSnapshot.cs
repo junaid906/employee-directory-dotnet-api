@@ -22,7 +22,7 @@ namespace EmployeeDirectoryApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.DepartmentEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.Department", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,8 +40,7 @@ namespace EmployeeDirectoryApi.Migrations
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UniqueId")
                         .HasColumnType("uuid");
@@ -57,7 +56,7 @@ namespace EmployeeDirectoryApi.Migrations
                     b.ToTable("Departments", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeeEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.Employee", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,8 +68,7 @@ namespace EmployeeDirectoryApi.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("AvatarUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -79,18 +77,15 @@ namespace EmployeeDirectoryApi.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<long>("PositionId")
                         .HasColumnType("bigint");
@@ -117,7 +112,7 @@ namespace EmployeeDirectoryApi.Migrations
                     b.ToTable("Employees", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePositionEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePosition", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,8 +133,7 @@ namespace EmployeeDirectoryApi.Migrations
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<long?>("ReportToPositionId")
                         .HasColumnType("bigint");
@@ -170,7 +164,7 @@ namespace EmployeeDirectoryApi.Migrations
                     b.ToTable("EmployeePositions", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.SubDepartmentEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.SubDepartment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,8 +185,7 @@ namespace EmployeeDirectoryApi.Migrations
 
                     b.Property<string>("SubDepartmentName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UniqueId")
                         .HasColumnType("uuid");
@@ -211,9 +204,9 @@ namespace EmployeeDirectoryApi.Migrations
                     b.ToTable("SubDepartments", (string)null);
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeeEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.Employee", b =>
                 {
-                    b.HasOne("EmployeeDirectoryApi.Entities.EmployeePositionEntity", "Position")
+                    b.HasOne("EmployeeDirectoryApi.Entities.EmployeePosition", "Position")
                         .WithMany("SiblingEmployees")
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -222,20 +215,20 @@ namespace EmployeeDirectoryApi.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePositionEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePosition", b =>
                 {
-                    b.HasOne("EmployeeDirectoryApi.Entities.DepartmentEntity", "Department")
+                    b.HasOne("EmployeeDirectoryApi.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("EmployeeDirectoryApi.Entities.EmployeePositionEntity", "ReportToPosition")
+                    b.HasOne("EmployeeDirectoryApi.Entities.EmployeePosition", "ReportToPosition")
                         .WithMany("ChildPositions")
                         .HasForeignKey("ReportToPositionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("EmployeeDirectoryApi.Entities.SubDepartmentEntity", "SubDepartment")
+                    b.HasOne("EmployeeDirectoryApi.Entities.SubDepartment", "SubDepartment")
                         .WithMany()
                         .HasForeignKey("SubDepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -247,9 +240,9 @@ namespace EmployeeDirectoryApi.Migrations
                     b.Navigation("SubDepartment");
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.SubDepartmentEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.SubDepartment", b =>
                 {
-                    b.HasOne("EmployeeDirectoryApi.Entities.DepartmentEntity", "Department")
+                    b.HasOne("EmployeeDirectoryApi.Entities.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -258,7 +251,7 @@ namespace EmployeeDirectoryApi.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePositionEntity", b =>
+            modelBuilder.Entity("EmployeeDirectoryApi.Entities.EmployeePosition", b =>
                 {
                     b.Navigation("ChildPositions");
 

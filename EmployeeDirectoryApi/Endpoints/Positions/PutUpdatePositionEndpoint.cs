@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Dtos.Positions;
 using EmployeeDirectoryApi.Services.Position;
 
@@ -15,6 +16,7 @@ public sealed class PutUpdatePositionEndpoint : IEndpoint
                 })
             .WithName("UpdatePosition")
             .WithTags("Positions")
+            .RequireAuthorization(AuthConstants.Scope.Write)
             .Produces<PositionDto>()
             .Produces(StatusCodes.Status404NotFound);
     }

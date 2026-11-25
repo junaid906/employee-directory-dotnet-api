@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Data;
 using EmployeeDirectoryApi.Data.Seed;
 using EmployeeDirectoryApi.Endpoints.Departments;
@@ -24,13 +25,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendPolicy", policy =>
     {
         // change headrer later dumb dumb
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5174")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
 
 builder.Services.AddDbContext<EmployeeDirectoryDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Employees")));
+
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<PositionService>();
 builder.Services.AddScoped<DepartmentService>();
@@ -49,12 +51,17 @@ builder.Services.AddOpenIddict()
     });
 
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+
 builder.Services.AddAuthorization(options =>
-    options.AddPolicy("Tool", policy => policy
+    options.AddPolicy(AuthConstants.Scope.Read, policy => policy
         .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
         .RequireAuthenticatedUser()
-        .RequireAssertion(ctx => ctx.User.HasScope(authSettings.Scope))));
-
+        .RequireAssertion(ctx =>
+            ctx.User.HasScope(authSettings.ReadScope)
+            || ctx.User.HasScope(authSettings.WriteScope))
+    )
+);
+    
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -81,8 +88,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapEmployees();
-app.MapPositions();
-app.MapDepartments();
-app.MapSubDepartments();
+var api = app.MapGroup("").RequireAuthorization(AuthConstants.Scope.Read);
+
+api.MapEmployees();
+api.MapPositions();
+api.MapDepartments();
+api.MapSubDepartments();
+
 app.Run();

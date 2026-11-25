@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Dtos.Positions;
 using EmployeeDirectoryApi.Services.Position;
 
@@ -15,6 +16,7 @@ public sealed class PostInsertPositionEndpoint : IEndpoint
                 })
             .WithName("InsertPosition")
             .WithTags("Positions")
+            .RequireAuthorization(AuthConstants.Scope.Write)
             .Produces<PositionDto>(StatusCodes.Status201Created);
     }
 }

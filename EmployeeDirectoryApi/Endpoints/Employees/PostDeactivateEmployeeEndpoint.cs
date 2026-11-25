@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Services.Employee;
 
 namespace EmployeeDirectoryApi.Endpoints.Employees;
@@ -14,6 +15,7 @@ public class PostDeactivateEmployeeEndpoint : IEndpoint
             })
             .WithName("DeactivateEmployee")
             .WithTags("Employee")
+            .RequireAuthorization(AuthConstants.Scope.Write)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
     }

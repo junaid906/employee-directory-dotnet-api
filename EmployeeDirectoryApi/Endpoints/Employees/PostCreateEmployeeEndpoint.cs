@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Dtos.Employees;
 using EmployeeDirectoryApi.Services.Employee;
 
@@ -11,6 +12,7 @@ public sealed class PostCreateEmployeeEndpoint : IEndpoint
                 async (CreateEmployeeDto createEmployeeDto, EmployeeService service, CancellationToken ct) => Results.Ok(await service.CreateEmployee(createEmployeeDto, ct)))
             .WithName("CreateEmployee")
             .WithTags("Employee")
+            .RequireAuthorization(AuthConstants.Scope.Write)
             .Produces<EmployeeDto>(StatusCodes.Status201Created);
     }
 }

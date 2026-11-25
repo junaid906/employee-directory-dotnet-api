@@ -1,3 +1,4 @@
+using EmployeeDirectoryApi.Constants;
 using EmployeeDirectoryApi.Dtos.Positions;
 using EmployeeDirectoryApi.Services.Position;
 
@@ -15,6 +16,7 @@ public sealed class PostReparentPositionsEndpoint : IEndpoint
                 })
             .WithName("ReparentPositions")
             .WithTags("Positions")
+            .RequireAuthorization(AuthConstants.Scope.Write)
             .Produces(StatusCodes.Status204NoContent);
     }
 }
